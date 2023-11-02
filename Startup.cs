@@ -1,15 +1,13 @@
 using KrishnaPGCare.Models.AutoCreate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using KrishnaPGCare.Models;
 
 namespace KrishnaPGCare
 {
@@ -38,7 +36,8 @@ namespace KrishnaPGCare
 
             //In-Memory  
             services.AddDistributedMemoryCache();
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromMinutes(3);
             });
             // Add framework services.  
@@ -71,6 +70,17 @@ namespace KrishnaPGCare
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public class AutoMapperConfig
+        {
+            public static MapperConfiguration RegisterMappings()
+            {
+                return new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<UserModel, UserTbl>();
+                });
+            }
         }
     }
 }
