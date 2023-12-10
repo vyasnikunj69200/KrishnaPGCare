@@ -7,7 +7,15 @@ namespace KrishnaPGCare.Models.AutoCreate
 {
     public partial class UserTbl
     {
-        public int UserId { get; set; } 
+        public UserTbl()
+        {
+            EmailNotificationsLogTbls = new HashSet<EmailNotificationsLogTbl>();
+            FeedBackTbls = new HashSet<FeedBackTbl>();
+            PropertyTbls = new HashSet<PropertyTbl>();
+            UserLoginHistoryTbls = new HashSet<UserLoginHistoryTbl>();
+        }
+
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -19,5 +27,10 @@ namespace KrishnaPGCare.Models.AutoCreate
         public string PostalCode { get; set; }
         public string Country { get; set; }
         public bool UserType { get; set; }
+
+        public virtual ICollection<EmailNotificationsLogTbl> EmailNotificationsLogTbls { get; set; }
+        public virtual ICollection<FeedBackTbl> FeedBackTbls { get; set; }
+        public virtual ICollection<PropertyTbl> PropertyTbls { get; set; }
+        public virtual ICollection<UserLoginHistoryTbl> UserLoginHistoryTbls { get; set; }
     }
 }

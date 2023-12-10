@@ -19,7 +19,7 @@
     <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-#
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Google Fonts -->
@@ -94,7 +94,7 @@
                 @Html.LabelFor(model => model.Password, new { @class = "control-label" })
                 @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "password" })
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    @Html.ValidationMessage("PasswordIncorrect", "", new { @class = "text-danger" })
+                @Html.ValidationMessage("PasswordIncorrect", "", new { @class = "text-danger" })
 
             </div>
             <div class="form-group">
@@ -102,155 +102,13 @@
             </div>
         }
 
-
+        @using (Html.BeginForm("ForgetPassword", "User", FormMethod.Post))
+        {
+            <div class="form-group">
+                <input type="submit" value="Forget Password" class="btn btn-primary" />
+            </div>
+        }
     </div>
-
-    <!-- Add this code to your view (e.g., Index.cshtml) -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login Successful</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Welcome to Krishna PG Care website!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="okButton">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <section class="section-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 col-md-4">
-                </div>
-                <div class="col-sm-12 col-md-4 section-md-t3">
-                    <div class="widget-a">
-                        <div class="w-header-a">
-                            <h3 class="w-title-a text-brand">Krishna PG Care</h3>
-                        </div>
-                        <div class="w-body-a">
-                            <p class="w-text-a color-text-a">
-                                The Feeling like home when you are not at home. The PG for All who need to stay Home in city
-                            </p>
-                        </div>
-                        <div class="w-footer-a">
-                            <ul class="list-unstyled">
-                                <li class="color-a">
-                                    <span class="color-text-a">Phone .</span> +91 8401755303
-                                </li>
-                                <li class="color-a">
-                                    <span class="color-text-a">Email .</span> krishnaPGCare@gmail.com
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                @*<div class="col-sm-12 col-md-4 section-md-t3">
-                        <div class="widget-a">
-                            <div class="w-header-a">
-                                <h3 class="w-title-a text-brand">International sites</h3>
-                            </div>
-                            <div class="w-body-a">
-                                <ul class="list-unstyled">
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">Venezuela</a>
-                                    </li>
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">China</a>
-                                    </li>
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">Hong Kong</a>
-                                    </li>
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">Argentina</a>
-                                    </li>
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">Singapore</a>
-                                    </li>
-                                    <li class="item-list-a">
-                                        <i class="bi bi-chevron-right"></i> <a href="#">Philippines</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>*@
-            </div>
-        </div>
-    </section>
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <nav class="nav-footer">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a href="#">Home</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">About</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">Property</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">Blog</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">Contact</a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="socials-a">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a href="#">
-                                    <i class="bi bi-facebook" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">
-                                    <i class="bi bi-twitter" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">
-                                    <i class="bi bi-instagram" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#">
-                                    <i class="bi bi-linkedin" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="copyright-footer">
-                        <p class="copyright color-text-a">
-                            &copy; Copyright
-                            <span class="color-a">Krishna PG Care</span> All Rights Reserved.
-                        </p>
-                    </div>
-                    <div class="credits">
-                        <!--
-                          All the links in the footer should remain intact.
-                          You can delete the links only if you purchased the pro version.
-                          Licensing information: https://bootstrapmade.com/license/
-                          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Krishna PG Care
-                        -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
 
     <!-- Add these lines to your HTML layout -->
@@ -284,4 +142,10 @@
         });
     </script>
 }
-
+<script>
+    // When the user clicks on <div>, open the popup
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
+</script>

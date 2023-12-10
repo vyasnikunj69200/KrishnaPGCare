@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using KrishnaPGCare.Models.AutoCreate;
+using System.ComponentModel.DataAnnotations;
 
 namespace KrishnaPGCare.Models
 {
-    using System.ComponentModel.DataAnnotations;
-
     public class UserModel
     {
         public int UserId { get; set; }
@@ -64,7 +60,32 @@ namespace KrishnaPGCare.Models
         [Required(ErrorMessage = "User Type is required.")]
         [Display(Name = "User Type")]
         public bool UserType { get; set; }
+
+        // Additional fields...
+
+        public UserModel() // Default constructor
+        {
+            // You can initialize default values or perform additional logic here if needed
+        }
+
+        public UserModel(UserTbl userTbl) : this()
+        {
+            // Map properties from UserTbl to UserModel
+            if (userTbl != null)
+            {
+                UserId = userTbl.UserId;
+                FirstName = userTbl.FirstName;
+                LastName = userTbl.LastName;
+                Email = userTbl.Email;
+                PasswordHash = userTbl.PasswordHash;
+                ContactPhone = userTbl.ContactPhone;
+                Addresss = userTbl.Addresss;
+                City = userTbl.City;
+                State = userTbl.State;
+                PostalCode = userTbl.PostalCode;
+                Country = userTbl.Country;
+                UserType = userTbl.UserType;
+            }
+        }
     }
-
-
 }
