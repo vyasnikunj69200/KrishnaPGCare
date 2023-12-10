@@ -18,6 +18,8 @@ namespace KrishnaPGCare.Models.AutoCreate
         }
 
         public virtual DbSet<BillTbl> BillTbls { get; set; }
+        public virtual DbSet<BookingRequest> BookingRequests { get; set; }
+        public virtual DbSet<BookingRequestTbl> BookingRequestTbls { get; set; }
         public virtual DbSet<BookingTbl> BookingTbls { get; set; }
         public virtual DbSet<EmailNotificationsLogTbl> EmailNotificationsLogTbls { get; set; }
         public virtual DbSet<FacilityTbl> FacilityTbls { get; set; }
@@ -71,6 +73,32 @@ namespace KrishnaPGCare.Models.AutoCreate
                     .WithMany(p => p.BillTbls)
                     .HasForeignKey(d => d.TenantId)
                     .HasConstraintName("FK__BillTbl__TenantI__60A75C0F");
+            });
+
+            modelBuilder.Entity<BookingRequest>(entity =>
+            {
+                entity.HasKey(e => e.RequestId);
+
+                entity.ToTable("BookingRequest");
+
+                entity.Property(e => e.AcceptByOwner).HasColumnName("acceptByOwner");
+
+                entity.Property(e => e.RoomType).HasColumnName("roomType");
+
+                entity.Property(e => e.Rquestdatetime).HasColumnName("rquestdatetime");
+            });
+
+            modelBuilder.Entity<BookingRequestTbl>(entity =>
+            {
+                entity.HasKey(e => e.RequestId);
+
+                entity.ToTable("BookingRequestTbl");
+
+                entity.Property(e => e.AcceptByOwner).HasColumnName("acceptByOwner");
+
+                entity.Property(e => e.RoomType).HasColumnName("roomType");
+
+                entity.Property(e => e.Rquestdatetime).HasColumnName("rquestdatetime");
             });
 
             modelBuilder.Entity<BookingTbl>(entity =>

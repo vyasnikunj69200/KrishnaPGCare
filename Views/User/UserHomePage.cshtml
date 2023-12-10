@@ -85,9 +85,9 @@
                     </button>
                 </td>
                 <td>
-                    <button>
+                    <button  onclick="navigateToTenantRequest()">
                         <img src="/assets/img/manageUser.jpg" alt="Manage Users" width="91px" />
-                        <label>Users Management</label>
+                        <label>Tenants Requests</label>
                     </button>
                 </td>
             </tr>
@@ -208,6 +208,11 @@
 
         function navigateToTenantList() {
             window.location.href = '/User/TenantList'; // Adjust the URL as needed
+        }
+
+        
+        function navigateToTenantRequest() {
+            window.location.href = '/User/TenantRequestList'; // Adjust the URL as needed
         }
         
     </script>

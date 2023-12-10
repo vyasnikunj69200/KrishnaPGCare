@@ -36,10 +36,98 @@ namespace KrishnaPGCare.Controllers
         public IActionResult TenantHomePage()
         {
             string welcomeMessage = TempData["WelcomeMessage"] as string;
-            List<PropertyTbl> properties = _context.PropertyTbls.ToList(); 
-            return View(properties);
-        }        
-        
+            List<PropertyTbl> properties = _context.PropertyTbls.ToList();
+            List<BookingRequestTbl> bookingRequests = _context.BookingRequestTbls.Where(x => x.TenantId == HttpContext.Session.GetInt32("UserId")).ToList();
+            var viewModel = new TenantHomePageViewModel
+            {
+                WelcomeMessage = welcomeMessage,
+                Properties = properties,
+                BookingRequests = bookingRequests
+            };
+            return View(viewModel);
+        }
+
+
+        public IActionResult TenantRequestList()
+        {
+            List<BookingRequestTbl> bookingRequests = _context.BookingRequestTbls.ToList();
+            List<TenantTbl> tenants = _context.TenantTbls.ToList();
+            List<PropertyTbl> properties = _context.PropertyTbls.ToList();
+
+            List<BookingRequestModel> viewModel = new List<BookingRequestModel>();
+
+            foreach (var booking in bookingRequests)
+            {
+                var model = new BookingRequestModel
+                {
+                    RequestId = booking.RequestId,
+                    TenantId = booking.TenantId,
+                    PropertyId = booking.PropertyId,
+                    Rquestdatetime = booking.Rquestdatetime,
+                    AcceptByOwner = booking.AcceptByOwner,
+                    RoomType = booking.RoomType,
+                    TenantName = tenants.FirstOrDefault(x => x.TenantId == booking.TenantId)?.FirstName + ' ' + tenants.FirstOrDefault(x => x.TenantId == booking.TenantId)?.LastName,
+                    PropertyName = properties.FirstOrDefault(x => x.PropertyId == booking.PropertyId)?.PropertyName,
+                    PhoneNumber = tenants.FirstOrDefault(x => x.TenantId == booking.TenantId)?.ContactPhone,
+                };
+
+                viewModel.Add(model);
+            }
+
+            return View(viewModel);
+        }
+
+
+        public IActionResult SingleBook([FromQuery] int propertyId)
+        {
+            BookingRequestTbl bookingRequestTbl = new BookingRequestTbl();
+            if (propertyId > 0)
+            {
+                bookingRequestTbl.PropertyId = propertyId;
+                bookingRequestTbl.RoomType = 1;
+                bookingRequestTbl.AcceptByOwner = false;
+                bookingRequestTbl.Rquestdatetime = DateTime.Now;
+                bookingRequestTbl.TenantId = HttpContext.Session.GetInt32("UserId");
+
+                _context.Add(bookingRequestTbl);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("TenantHomePage", "User");
+        }
+
+        public IActionResult DoubleBook([FromQuery] int propertyId)
+        {
+            BookingRequestTbl bookingRequestTbl = new BookingRequestTbl();
+            if (propertyId > 0)
+            {
+                bookingRequestTbl.PropertyId = propertyId;
+                bookingRequestTbl.RoomType = 2;
+                bookingRequestTbl.AcceptByOwner = false;
+                bookingRequestTbl.Rquestdatetime = DateTime.Now;
+                bookingRequestTbl.TenantId = HttpContext.Session.GetInt32("UserId");
+
+                _context.Add(bookingRequestTbl);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("TenantHomePage", "User");
+        }
+
+        public IActionResult TripleBook([FromQuery] int propertyId)
+        {
+            BookingRequestTbl bookingRequestTbl = new BookingRequestTbl();
+            if (propertyId > 0)
+            {
+                bookingRequestTbl.PropertyId = propertyId;
+                bookingRequestTbl.RoomType = 3;
+                bookingRequestTbl.AcceptByOwner = false;
+                bookingRequestTbl.Rquestdatetime = DateTime.Now;
+                bookingRequestTbl.TenantId = HttpContext.Session.GetInt32("UserId");
+
+                _context.Add(bookingRequestTbl);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("TenantHomePage", "User");
+        }
 
         public IActionResult ManageTenantProfile()
         {
@@ -74,8 +162,6 @@ namespace KrishnaPGCare.Controllers
             return View(properties);
         }
 
-
-
         public IActionResult ManageProfile()
         {
             // Example of retrieving UserId from session
@@ -95,6 +181,12 @@ namespace KrishnaPGCare.Controllers
             }
 
             return View();
+        }
+
+        public IActionResult ViewTenatProfile([FromQuery] int propertyId)
+        {
+            TenantTbl tenant = _context.TenantTbls.Where(x => x.TenantId == propertyId).FirstOrDefault();
+            return View(tenant);
         }
 
         //// GET: User/Create
@@ -250,7 +342,7 @@ namespace KrishnaPGCare.Controllers
         public IActionResult TenantList()
         {
             List<TenantTbl> tenant = _context.TenantTbls.ToList();
-            return View( tenant);
+            return View(tenant);
         }
 
 

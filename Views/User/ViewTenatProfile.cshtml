@@ -1,4 +1,8 @@
-﻿@model KrishnaPGCare.Models.AutoCreate.PropertyTbl
+﻿@model KrishnaPGCare.Models.AutoCreate.TenantTbl
+@{
+    // Retrieve the value from TempData
+    string welcomeMessage = TempData["WelcomeMessage"] as string;
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,10 +34,6 @@
     <link href="~/assets/css/style.css" rel="stylesheet">
 
     <!-- Your other head elements here -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
-
 </head>
 <body>
     <header id="header" class="fixed-top d-flex align-items-center header-transparent">
@@ -52,10 +52,11 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Log Out</a>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item " asp-controller="User" asp-action="ManageProfile">manage profile</a>
+                                <a class="dropdown-item " asp-controller="User" asp-action="ManageTenantProfile">manage profile</a>
                             </div>
                         </li>
                     </ul>
@@ -64,145 +65,51 @@
                 <button type="button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01">
                     <i class="bi bi-search"></i>
                 </button>
+
             </div>
         </nav>
     </header>
-    <div class="container" style="margin-top: 200px">
-        <h2>Edit Property</h2>
-
-        <form asp-action="UpdateProperty" asp-controller="User" method="post" class="property-form">
-            <table class="table table-bordered">
-                <tr>
-                    <td>
-                        <input type="hidden" asp-for="PropertyId" />
-                        <label for="PropertyName">Property Name:</label>
-                    </td>
-                    <td>
-                        <input asp-for="PropertyName" class="form-control" required />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label asp-for="PropertyDescription">Property Description:</label>
-                    </td>
-                    <td>
-                        <textarea asp-for="PropertyDescription" class="form-control" required></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PropertyType">Property Type:</label>
-                    </td>
-                    <td>
-                        <select asp-for="PropertyType" class="form-control">
-                            <option value=1>Bungalow</option>
-                            <option value=2>Tenement</option>
-                            <option value=3>Flat</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label asp-for="Address">Address:</label>
-                    </td>
-                    <td>
-                        <input asp-for="Address" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="City">City:</label>
-                    </td>
-                    <td>
-                        <select asp-for="City" class="form-control">
-                            <option value=1 selected>
-                                Ahmedabad
-                            </option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="State">State:</label>
-                    </td>
-                    <td>
-                        <select asp-for="State" class="form-control">
-                            <option value=1 selected>Gujrat</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PostalCode">Postal Code:</label>
-                    </td>
-                    <td>
-                        <input asp-for="PostalCode" class="form-control" required />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="Country">Country:</label>
-                    </td>
-                    <td>
-                        <select asp-for="Country" class="form-control">
-                            <option value=1 selected>India</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="TotalRooms">Total Rooms:</label>
-                    </td>
-                    <td>
-                        <input asp-for="TotalRooms" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="AvailableRooms">Available Rooms:</label>
-                    </td>
-                    <td>
-                        <input asp-for="AvailableRooms" required class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PricePerRoom">Price Per Room:</label>
-                    </td>
-                    <td>
-                        <input asp-for="PricePerRoom" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="Amenities">Amenities:</label>
-                    </td>
-                    <td>
-                        <input asp-for="Amenities" required class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PropertyStatus">Property Status:</label>
-                    </td>
-                    <td>
-                        <div class="form-check">
-                            <input asp-for="PropertyStatus" type="checkbox" class="form-check-input" />
-                            <label class="form-check-label">Active</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="text-center">
-                        <button type="submit" class="btn btn-primary">Update Property</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
+    <div class="container" style="margin-top:200px">
+        <h2>Tenant Profile</h2>
+        <table class="table">
+            <tr>
+                <th>Tenant ID</th>
+                <td>@Model.TenantId</td>
+            </tr>
+            <tr>
+                <th>First Name</th>
+                <td>@Model.FirstName</td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td>@Model.LastName</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>@Model.Password</td>
+            </tr>
+            <tr>
+                <th>Contact Phone</th>
+                <td>@Model.ContactPhone</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>@Model.Address</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>@Model.City</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>@Model.State</td>
+            </tr>
+        </table>
     </div>
-
 
     <section class="section-footer">
         <div class="container">
@@ -300,24 +207,22 @@
         </div>
     </footer>
 
-
     <style>
-        .property-form {
-            max-width: 500px;
-            margin: auto;
+        /* Add styles for the table border and header here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
 
-        .checkbox {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-label {
-            margin-right: 10px;
+        th {
+            background-color: #4CAF50; /* Green color for header background */
+            color: white;
         }
     </style>
 </body>
