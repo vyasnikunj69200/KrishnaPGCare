@@ -1,4 +1,9 @@
-﻿@model KrishnaPGCare.Models.AutoCreate.PropertyTbl
+﻿@model List<KrishnaPGCare.Models.AutoCreate.PropertyTbl>
+@{
+    // Retrieve the value from TempData
+    string welcomeMessage = TempData["WelcomeMessage"] as string;
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,10 +35,6 @@
     <link href="~/assets/css/style.css" rel="stylesheet">
 
     <!-- Your other head elements here -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
-
 </head>
 <body>
     <header id="header" class="fixed-top d-flex align-items-center header-transparent">
@@ -52,10 +53,11 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Log Out</a>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item " asp-controller="User" asp-action="ManageProfile">manage profile</a>
+                                <a class="dropdown-item " asp-controller="User" asp-action="ManageTenantProfile">manage profile</a>
                             </div>
                         </li>
                     </ul>
@@ -64,143 +66,94 @@
                 <button type="button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01">
                     <i class="bi bi-search"></i>
                 </button>
+
             </div>
         </nav>
     </header>
-    <div class="container" style="margin-top: 200px">
-        <h2>Edit Property</h2>
-
-        <form asp-action="UpdateProperty" asp-controller="User" method="post" class="property-form">
-            <table class="table table-bordered">
+    @*<div class="container" style="margin-top:200px">
+            <table>
                 <tr>
                     <td>
-                        <label for="PropertyName">Property Name:</label>
+                        <button onclick="navigateToUserIndex()">
+                            <img src="/assets/img/manageProeprty.png" alt="Manage Property" width="61px" />
+                            <label>Manage Property</label>
+                        </button>
                     </td>
                     <td>
-                        <input asp-for="PropertyName" class="form-control" required />
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label asp-for="PropertyDescription">Property Description:</label>
+                        <button>
+                            <img src="/assets/img/telent-icon.png" alt="Tenant Users" width="82px" />
+                            <label>Tenant Users</label>
+                        </button>
                     </td>
                     <td>
-                        <textarea asp-for="PropertyDescription" class="form-control" required></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PropertyType">Property Type:</label>
-                    </td>
-                    <td>
-                        <select asp-for="PropertyType" class="form-control">
-                            <option value=1>Bungalow</option>
-                            <option value=2>Tenement</option>
-                            <option value=3>Flat</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label asp-for="Address">Address:</label>
-                    </td>
-                    <td>
-                        <input asp-for="Address" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="City">City:</label>
-                    </td>
-                    <td>
-                        <select asp-for="City" class="form-control">
-                            <option value=1 selected>
-                                Ahmedabad
-                            </option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="State">State:</label>
-                    </td>
-                    <td>
-                        <select asp-for="State" class="form-control">
-                            <option value=1 selected>Gujrat</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PostalCode">Postal Code:</label>
-                    </td>
-                    <td>
-                        <input asp-for="PostalCode" class="form-control" required />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="Country">Country:</label>
-                    </td>
-                    <td>
-                        <select asp-for="Country" class="form-control">
-                            <option value=1 selected>India</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="TotalRooms">Total Rooms:</label>
-                    </td>
-                    <td>
-                        <input asp-for="TotalRooms" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="AvailableRooms">Available Rooms:</label>
-                    </td>
-                    <td>
-                        <input asp-for="AvailableRooms" required class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PricePerRoom">Price Per Room:</label>
-                    </td>
-                    <td>
-                        <input asp-for="PricePerRoom" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="Amenities">Amenities:</label>
-                    </td>
-                    <td>
-                        <input asp-for="Amenities" required class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label asp-for="PropertyStatus">Property Status:</label>
-                    </td>
-                    <td>
-                        <div class="form-check">
-                            <input asp-for="PropertyStatus" type="checkbox" class="form-check-input" />
-                            <label class="form-check-label">Active</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="text-center">
-                        <button type="submit" class="btn btn-primary">Update Property</button>
+                        <button>
+                            <img src="/assets/img/manageUser.jpg" alt="Manage Users" width="91px" />
+                            <label>Users Management</label>
+                        </button>
                     </td>
                 </tr>
             </table>
-        </form>
+        </div>*@
+    <div class="container" style="margin-top: 200px">
+        <div class="container">
+            <h2>Property List</h2>
+            <table class="property-table">
+                <tbody>
+                    <tr>
+                        @foreach (var property in Model)
+                        {
+                            <td>
+                                <table class="inner-table">
+                                    <tr><td><strong><img src="~/assets/img/registerProperty.jpg" /></strong> </td></tr>
+                                    <tr><td><h3><strong>@property.PropertyName</strong></h3></td></tr>
+                                    <tr><td><strong>@property.PropertyDescription</strong></td></tr>
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                @{
+                                                    string propertyTypeText = "";
+                                                    if (property.PropertyType.HasValue)
+                                                    {
+                                                        switch (property.PropertyType.Value)
+                                                        {
+                                                            case 1:
+                                                                propertyTypeText = "Bungalow";
+                                                                break;
+                                                            case 2:
+                                                                propertyTypeText = "Tenement";
+                                                                break;
+                                                            case 3:
+                                                                propertyTypeText = "Flat";
+                                                                break;
+                                                        }
+                                                    }
+                                                }
+                                                @propertyTypeText
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr><td>Address:<strong> @property.Address, @property.City, @property.State</strong></td></tr>
+                                    <tr><td>Total Rooms:<strong> @property.TotalRooms</strong></td></tr>
+                                    <tr><td>Price Per Room:<strong>@property.PricePerRoom*</strong><br/> (Basic price for single room)</td></tr>
+                                    <tr><td>Amenities:<strong> @property.Amenities</strong></td></tr>
+                                    <tr><td>Request for:<br/>                                  
+    <a class="green-box" asp-controller="User" asp-action="SingleBook" asp-route-propertyId="@property.PropertyId">Single Room</a>
+                                        <br/><br />
+                                    <a class="green-box" asp-controller="User" asp-action="DoubleBook" asp-route-propertyId="@property.PropertyId">Double Sharing Room</a><br /><br />
+                                    <a class="green-box" asp-controller="User" asp-action="TripleBook" asp-route-propertyId="@property.PropertyId">Triple Sharing Room</a><br /><br />
+</table>
+                            </td>
+
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+
+
+
 
 
     <section class="section-footer">
@@ -298,26 +251,102 @@
             </div>
         </div>
     </footer>
+    @*<div >
+            <button>
+                <img src="/assets/img/registerProperty.jpg" />
+            </button>
+            <label>Add Property</label>
+        </div>*@
 
+    <script>
+        var welcomeMessage = @Json.Serialize(welcomeMessage);
+        if (welcomeMessage !== null) {
+            alert(welcomeMessage);
+        }
+    </script>
+    <script>
+        function navigateToUserIndex() {
+            window.location.href = '/User/manageProperty'; // Adjust the URL as needed
+        }
+    </script>
 
     <style>
-        .property-form {
-            max-width: 500px;
-            margin: auto;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        td {
+            text-align: center;
+            padding: 20px;
         }
 
-        .checkbox {
-            display: flex;
-            align-items: center;
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
         }
 
-        .checkbox-label {
-            margin-right: 10px;
+        img {
+            width: 80px; /* Set the desired width for the images */
+            height: 80px; /* Set the desired height for the images */
+            border-radius: 50%; /* Make the images circular if desired */
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
         }
     </style>
+
+    <style>
+
+        .property-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            .property-table td {
+                border: 1px solid #ddd;
+                padding: 8px;                
+            }
+
+                .property-table td strong {
+                    color: #2e48ca; /* Set the font color to green for strong elements */
+                }
+
+        .inner-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            .inner-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+        .green-box {
+            display: inline-block;
+            padding: 10px 20px; /* Adjust padding as needed */
+            background-color: #4CAF50; /* Green color */
+            color: white; /* White text color */
+            text-decoration: none;
+            border: 1px solid #45a049; /* Border color, adjust as needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+        }
+
+            /* Hover effect for better user experience */
+            .green-box:hover {
+                background-color: #45a049; /* Darker green on hover */
+            }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $(".property-table td:not(:has(strong))").css("color", "black");
+        });
+    </script>
+
 </body>
 </html>

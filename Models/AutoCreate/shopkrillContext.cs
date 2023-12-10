@@ -485,13 +485,6 @@ namespace KrishnaPGCare.Models.AutoCreate
                 entity.Property(e => e.UserAgent)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserLoginHistoryTbls)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__UserLogin__UserI__4AB81AF0");
             });
 
             modelBuilder.Entity<UserTbl>(entity =>
@@ -501,7 +494,9 @@ namespace KrishnaPGCare.Models.AutoCreate
 
                 entity.ToTable("UserTbl");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("UserID");
 
                 entity.Property(e => e.Addresss)
                     .HasMaxLength(255)

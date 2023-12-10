@@ -33,6 +33,35 @@ namespace KrishnaPGCare.Controllers
             return View();
         }
 
+        public IActionResult TenantHomePage()
+        {
+            string welcomeMessage = TempData["WelcomeMessage"] as string;
+            List<PropertyTbl> properties = _context.PropertyTbls.ToList(); 
+            return View(properties);
+        }        
+        
+
+        public IActionResult ManageTenantProfile()
+        {
+            // Example of retrieving UserId from session
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            // Assuming UserTbl and UserModel have similar properties
+            TenantTbl userTbl = _context.TenantTbls.FirstOrDefault(x => x.TenantId == userId);
+
+            if (userTbl != null)
+            {
+                TenantModel user = ToTenantModel(userTbl); // Assuming UserModel has a constructor that accepts UserTbl
+                return View("TenantAddEdit", user); // Now you can work with the 'user' object, which is an instance of UserModel
+            }
+            else
+            {
+                // Handle the case where the user is not found
+            }
+
+            return View();
+        }
+
         public IActionResult manageProperty()
         {
             var properties = _context.PropertyTbls.ToList();
@@ -50,7 +79,7 @@ namespace KrishnaPGCare.Controllers
         public IActionResult ManageProfile()
         {
             // Example of retrieving UserId from session
-            var userId = HttpContext.Session.GetInt32("UserId");            
+            var userId = HttpContext.Session.GetInt32("UserId");
 
             // Assuming UserTbl and UserModel have similar properties
             UserTbl userTbl = _context.UserTbls.FirstOrDefault(x => x.UserId == userId);
@@ -120,7 +149,15 @@ namespace KrishnaPGCare.Controllers
             if (IsValidUser(model.Email, model.Password))
             {
                 TempData["WelcomeMessage"] = "Welcome to Krishna PG Care website";
-                return RedirectToAction("UserHomePage", "User");
+                if (model.Email.ToString() == "shivani@gmai.com")
+                {
+                    return RedirectToAction("UserHomePage", "User");
+                }
+                else
+                {
+                    return RedirectToAction("TenantHomePage", "User");
+                }
+
             }
             ModelState.AddModelError("PasswordIncorrect", "Incorrect password");
             return View(model);
@@ -173,7 +210,7 @@ namespace KrishnaPGCare.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingProperty = _context.UserTbls.FirstOrDefault(x => x.UserId == updatedProfile.UserId);                
+                var existingProperty = _context.UserTbls.FirstOrDefault(x => x.UserId == updatedProfile.UserId);
 
                 if (existingProperty != null)
                 {
@@ -204,30 +241,133 @@ namespace KrishnaPGCare.Controllers
             return View("UserHomePage");
         }
 
+        public IActionResult AddOrUpdateTenant1()
+        {
+            TenantModel tenant = new TenantModel();
+            return View("TenantAddEdit", tenant);
+        }
+
+        public IActionResult TenantList()
+        {
+            List<TenantTbl> tenant = _context.TenantTbls.ToList();
+            return View( tenant);
+        }
+
+
+        [HttpPost]
+        public IActionResult AddOrUpdateTenant(TenantModel tenant)
+        {
+            if (ModelState.IsValid)
+            {
+                // Add or update logic based on your requirement
+                if (tenant.TenantId == 0)
+                {
+                    // This is a new tenant, add it to the database
+                    TenantTbl tenantTbl = ToTenantTbl(tenant);
+                    _context.TenantTbls.Add(tenantTbl);
+                }
+                else
+                {
+                    // This is an existing tenant, update it in the database
+                    var existingTenant = _context.TenantTbls.FirstOrDefault(t => t.TenantId == tenant.TenantId);
+
+                    if (existingTenant != null)
+                    {
+                        // Update properties with new values
+                        // Update properties with new values
+                        existingTenant.FirstName = tenant.FirstName;
+                        existingTenant.LastName = tenant.LastName;
+                        existingTenant.Email = tenant.Email;
+                        existingTenant.Password = tenant.Password;
+                        existingTenant.ContactPhone = tenant.ContactPhone;
+                        existingTenant.Address = tenant.Address;
+                        existingTenant.City = tenant.City;
+                        existingTenant.State = tenant.State;
+                        existingTenant.PostalCode = tenant.PostalCode;
+                        existingTenant.Country = tenant.Country;
+                        // Update other properties similarly
+
+                        // Update the database
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        // Tenant not found
+                        return NotFound();
+                    }
+                }
+
+                // Save changes to the database
+                _context.SaveChanges();
+
+                // Redirect to a success page or return a success response
+                if (tenant.TenantId == 0)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            // If ModelState is not valid, return to the same view with validation errors
+            return View("TenantAddEdit", tenant);
+        }
+
         #region PRIVATE METHOD
 
         private bool IsValidUser(string email, string password)
         {
-            var userEntity = _context.UserTbls.FirstOrDefault(u => u.Email == email);
-
-            if (userEntity != null)
+            if (email.ToString() == "shivani@gmai.com")
             {
-                if (password == userEntity.PasswordHash)
+                var userEntity = _context.UserTbls.FirstOrDefault(u => u.Email == email);
+                if (userEntity != null)
                 {
-                    // Passwords match, so the user is valid
+                    if (password == userEntity.PasswordHash)
+                    {
+                        // Passwords match, so the user is valid
 
-                    // Log the successful login attempt in UserLoginHistoryTbl
-                    LogSuccessfulLogin(userEntity.UserId);
-                    HttpContext.Session.SetInt32("UserId", userEntity.UserId);
-                    return true;
+                        // Log the successful login attempt in UserLoginHistoryTbl
+                        LogSuccessfulLogin(userEntity.UserId);
+                        HttpContext.Session.SetInt32("UserId", userEntity.UserId);
+                        return true;
+                    }
+                    // Log the unsuccessful login attempt in UserLoginHistoryTbl
+                    LogFailedLogin(email);
+
+                    // If no user with the provided email or invalid password, return false
+                    return false;
                 }
+                return false;
+
             }
+            else
+            {
+                var userEntity = _context.TenantTbls.FirstOrDefault(u => u.Email == email);
 
-            // Log the unsuccessful login attempt in UserLoginHistoryTbl
-            LogFailedLogin(email);
 
-            // If no user with the provided email or invalid password, return false
-            return false;
+                //var userEntity = _context.UserTbls.FirstOrDefault(u => u.Email == email);
+
+                if (userEntity != null)
+                {
+                    if (password == userEntity.Password)
+                    {
+                        // Passwords match, so the user is valid
+
+                        // Log the successful login attempt in UserLoginHistoryTbl
+                        LogSuccessfulLogin(userEntity.TenantId);
+                        HttpContext.Session.SetInt32("UserId", userEntity.TenantId);
+                        return true;
+                    }
+                }
+
+                // Log the unsuccessful login attempt in UserLoginHistoryTbl
+                LogFailedLogin(email);
+
+                // If no user with the provided email or invalid password, return false
+                return false;
+            }
         }
 
         private void LogSuccessfulLogin(int userId)
@@ -249,7 +389,7 @@ namespace KrishnaPGCare.Controllers
         {
             var loginHistory = new UserLoginHistoryTbl
             {
-                UserId = null, // Set to null for failed login attempts
+                UserId = 0, // Set to null for failed login attempts
                 LoginDateTime = DateTime.Now,
                 Ipaddress = "Not found",//_httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),  // Replace with actual IP address
                 UserAgent = "Not found",   // Replace with actual user agent
@@ -262,5 +402,64 @@ namespace KrishnaPGCare.Controllers
         }
 
         #endregion
+
+
+        #region Table convert
+        public TenantTbl ToTenantTbl(TenantModel tenantModel)
+        {
+            return new TenantTbl
+            {
+                TenantId = tenantModel.TenantId,
+                FirstName = tenantModel.FirstName,
+                LastName = tenantModel.LastName,
+                Email = tenantModel.Email,
+                Password = tenantModel.Password,
+                ContactPhone = tenantModel.ContactPhone,
+                Address = tenantModel.Address,
+                City = tenantModel.City,
+                State = tenantModel.State,
+                PostalCode = tenantModel.PostalCode,
+                Country = tenantModel.Country,
+                MoveInDate = tenantModel.MoveInDate,
+                MonthlyRent = tenantModel.MonthlyRent,
+                RoomNumber = tenantModel.RoomNumber,
+                LeaseStartDate = tenantModel.LeaseStartDate,
+                LeaseEndDate = tenantModel.LeaseEndDate,
+                LeaseTerm = tenantModel.LeaseTerm,
+                SecurityDeposit = tenantModel.SecurityDeposit,
+                LeaseStatus = tenantModel.LeaseStatus
+                // Initialize other collections if necessary (e.g., HashSet properties)
+            };
+        }
+
+        public TenantModel ToTenantModel(TenantTbl tenantModel)
+        {
+            return new TenantModel
+            {
+                TenantId = tenantModel.TenantId,
+                FirstName = tenantModel.FirstName,
+                LastName = tenantModel.LastName,
+                Email = tenantModel.Email,
+                Password = tenantModel.Password,
+                ContactPhone = tenantModel.ContactPhone,
+                Address = tenantModel.Address,
+                City = tenantModel.City,
+                State = tenantModel.State,
+                PostalCode = tenantModel.PostalCode,
+                Country = tenantModel.Country,
+                MoveInDate = tenantModel.MoveInDate,
+                MonthlyRent = tenantModel.MonthlyRent,
+                RoomNumber = tenantModel.RoomNumber,
+                LeaseStartDate = tenantModel.LeaseStartDate,
+                LeaseEndDate = tenantModel.LeaseEndDate,
+                LeaseTerm = tenantModel.LeaseTerm,
+                SecurityDeposit = tenantModel.SecurityDeposit,
+                LeaseStatus = tenantModel.LeaseStatus
+                // Initialize other collections if necessary (e.g., HashSet properties)
+            };
+        }
+
+        #endregion
+
     }
 }

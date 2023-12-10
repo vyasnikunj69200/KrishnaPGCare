@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KrishnaPGCare.Models.AutoCreate;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -59,12 +60,10 @@ namespace KrishnaPGCare.Models
         [StringLength(50, ErrorMessage = "Country should be at most 50 characters.")]
         [Display(Name = "Country")]
         public string Country { get; set; }
-
-        [Required(ErrorMessage = "Move-In Date is required.")]
+        
         [Display(Name = "Move-In Date")]
         public DateTime? MoveInDate { get; set; }
-
-        [Required(ErrorMessage = "Monthly Rent is required.")]
+        
         [Display(Name = "Monthly Rent")]
         public decimal? MonthlyRent { get; set; }
 
@@ -87,5 +86,6 @@ namespace KrishnaPGCare.Models
         [Display(Name = "Lease Status")]
         public bool? LeaseStatus { get; set; }
     }
-
 }
+
+

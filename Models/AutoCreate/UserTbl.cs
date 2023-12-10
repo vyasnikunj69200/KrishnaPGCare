@@ -12,7 +12,6 @@ namespace KrishnaPGCare.Models.AutoCreate
             EmailNotificationsLogTbls = new HashSet<EmailNotificationsLogTbl>();
             FeedBackTbls = new HashSet<FeedBackTbl>();
             PropertyTbls = new HashSet<PropertyTbl>();
-            UserLoginHistoryTbls = new HashSet<UserLoginHistoryTbl>();
         }
 
         public int UserId { get; set; }
@@ -31,6 +30,5 @@ namespace KrishnaPGCare.Models.AutoCreate
         public virtual ICollection<EmailNotificationsLogTbl> EmailNotificationsLogTbls { get; set; }
         public virtual ICollection<FeedBackTbl> FeedBackTbls { get; set; }
         public virtual ICollection<PropertyTbl> PropertyTbls { get; set; }
-        public virtual ICollection<UserLoginHistoryTbl> UserLoginHistoryTbls { get; set; }
     }
 }
